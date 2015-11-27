@@ -1,0 +1,28 @@
+{
+  "name": "osc",
+  "version": "0.0.0",
+  "description": "good vibrations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Murali Varma",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/muraliavarma/osc.git"
+  },
+  "keywords": [
+    "music",
+    "osc",
+    "oscillator",
+    "nodejs"
+  ],
+  "bugs": {
+    "url": "https://github.com/muraliavarma/osc/issues"
+  },
+  "homepage": "https://github.com/muraliavarma/osc#readme",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
