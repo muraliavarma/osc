@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/muraliavarma/osc#readme",
   "dependencies": {
-    "express": "^4.13.3"
+  },
+  "devDependencies": {
   }
 }

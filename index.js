@@ -1,13 +1,19 @@
-var express = require('express');
-var app = express();
+import path from 'path'
+import Express from 'express'
+import React from 'react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import counterApp from './reducers'
+import App from './containers/App'
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+const app = Express()
+const port = 3000
 
-var server = app.listen(3000, function () {
-  var host = server.address().address;
-  var port = server.address().port;
+// This is fired every time the server side receives a request
+app.use(handleRender)
 
-  console.log('Example app listening at http://%s:%s', host, port);
-});
+// We are going to fill these out in the sections to follow
+function handleRender(req, res) { /* ... */ }
+function renderFullPage(html, initialState) { /* ... */ }
+
+app.listen(port)
