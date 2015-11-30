@@ -1,19 +1,20 @@
-import path from 'path'
-import Express from 'express'
 import React from 'react'
-import { createStore } from 'redux'
+import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import counterApp from './reducers'
 import App from './containers/App'
+import configureStore from './store/configureStore'
+import * as MouseActions from './actions/mouse'
 
-const app = Express()
-const port = 3000
+const store = configureStore()
 
-// This is fired every time the server side receives a request
-app.use(handleRender)
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)
 
-// We are going to fill these out in the sections to follow
-function handleRender(req, res) { /* ... */ }
-function renderFullPage(html, initialState) { /* ... */ }
-
-app.listen(port)
+window.onmousewheel = function(event) {
+	console.log(event);
+	document.getElementById('root').dispatchEvent(MouseActions.scrollUp());
+}
