@@ -1,7 +1,17 @@
 import React, { Component, PropTypes } from 'react'
+import BaseComponent from './BaseComponent'
 import * as MouseActions from '../actions/mouse'
 
-class Knob extends Component {
+class Knob extends BaseComponent {
+	constructor(props, context) {
+		super(props, context)
+		this.state = {
+			value: this.props.initialValue || 50,
+			minValue: this.props.minValue || 0,
+			maxValue: this.props.maxValue || 100
+		}
+	}
+
 	componentDidMount() {
 		addEventListener(MouseActions.SCROLL_UP, function(e) {
 			console.log('murs1', e);

@@ -13,8 +13,3 @@ render(
   </Provider>,
   document.getElementById('root')
 )
-
-window.onmousewheel = function(event) {
-	console.log(event);
-	document.getElementById('root').dispatchEvent(MouseActions.scrollUp());
-}
