@@ -3,11 +3,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import Oscillator from '../components/Oscillator'
-import Knob from '../components/Knob'
 
 import * as OscillatorActions from '../actions/oscillator'
-import * as KnobActions from '../actions/knob'
-import * as MouseActions from '../actions/mouse'
 
 class App extends Component {
 	constructor(props) {
@@ -18,6 +15,7 @@ class App extends Component {
 
 		return (
 			<div>
+				<Oscillator volume={20} pan={30}/>
 				<Oscillator/>
 			</div>
 		);
@@ -31,7 +29,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(OscillatorActions, dispatch)
+  return bindActionCreators(Object.assign({}, OscillatorActions), dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
