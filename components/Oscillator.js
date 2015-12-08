@@ -8,29 +8,31 @@ class Oscillator extends Component {
 			volume: this.props.volume || 75,
 			pan: this.props.pan || 0,
 			frequency: this.props.frequency || 100,
-			isPlaying: false
+			isPlaying: false,
+			isHovering: false
 		}
 	}
 
 	onVolumeChange(value) {
-		this.state.volume = value
+		this.setState({'volume': value})
 		if (this.gainNode)
 			this.gainNode.gain.value = this.state.volume/100
 	}
 
 	onPanChange(value) {
-		this.state.pan = value
+		this.setState({'pan': value})
 	}
 
-	onFrequencyChange(value) {
-		this.state.frequency = value
-		if (this.oscillator)
-			this.oscillator.frequency.value = this.state.frequency
+	setFrequency(value) {
+		this.setState({'frequency': value})
+		if (this.oscillator) {
+			this.oscillator.frequency.value = value
+		}
 	}
 
 	onPlayPause(event) {
 		if (this.state.isPlaying) {
-			this.state.isPlaying = false
+			this.setState({'isPlaying': false})
 			if (this.oscillator) {
 				this.oscillator.stop(0)
 			}
@@ -38,7 +40,7 @@ class Oscillator extends Component {
 			return
 		}
 
-		this.state.isPlaying = true
+		this.setState({'isPlaying': true})
 
 		this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
 		this.oscillator = this.audioCtx.createOscillator()
@@ -56,32 +58,35 @@ class Oscillator extends Component {
 	}
 
 	render() {
-		const { volume, pan, frequency, isPlaying } = this.props
 		return (
-			// <p>
-			//   Clicked: {oscillator} times
-			//   {' '}
-			//   <button onClick={increment}>+</button>
-			//   {' '}
-			//   <button onClick={decrement}>-</button>
-			//   {' '}
-			//   <button onClick={incrementIfOdd}>Increment if odd</button>
-			//   {' '}
-			//   <button onClick={() => incrementAsync()}>Increment async</button>
-			// </p>
 			<div className="oscillator">
 				<div className="oscillator-titlebar">
 					<span className="oscillator-title">Oscillator</span>
-					<button onClick={(e) => this.onPlayPause(e)}>Play/Pause</button>
+
+					<div onClick={(e) => this.onPlayPause(e)} className={this.state.isHovering? 'oscillator-play-pause-hover' : 'oscillator-play-pause'}
+						onMouseOver={() => this.setState({isHovering: !this.state.isHovering})}
+						onMouseOut={() => this.setState({isHovering: !this.state.isHovering})}>
+						<div className={this.state.isPlaying ? 'control-pause' : 'control-play'}></div>
+					</div>
 				</div>
 				<hr/>
 				<div className="oscillator-container">
-					<Knob title="Volume" type="percent" value={volume} onChange={(e) => this.onVolumeChange(e)}></Knob>
-					<Knob title="Pan" type="percent" value={pan} minValue={-100} maxValue={100} onChange={(e) => this.onPanChange(e)}></Knob>
-					<Knob title="Frequency" type="percent" value={frequency} minValue={0} maxValue={2000} onChange={(e) => this.onFrequencyChange(e)}></Knob>
+					<Knob title="Volume" type="percent" value={this.state.volume} onChange={(value) => this.onVolumeChange(value)}></Knob>
+					<Knob title="Pan" type="percent" value={this.state.pan} minValue={-100} maxValue={100} onChange={(value) => this.onPanChange(value)}></Knob>
+					<Knob title="Frequency" type="percent" value={this.state.frequency} minValue={0} maxValue={2000} onChange={(value) => this.setFrequency(value)}></Knob>
+					{this.state.frequency}
+					<span onClick={(e) => {
+						this.setFrequency(100)
+					}}>A</span>
+					<span onClick={(e) => {
+						this.setFrequency(1000)
+					}}>B</span>
+					<span onClick={(e) => {
+						this.setFrequency(2000)
+					}}>C</span>
 				</div>
 			</div>
-			)
+		)
 	}
 }
 
