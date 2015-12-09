@@ -24,7 +24,7 @@ class Knob extends BaseComponent {
 				<div className="knob-circle"
 					style={{
 						transform: 'rotate(' + (270.0 * (this.state.value - this.state.minValue) / (this.state.maxValue - this.state.minValue) - 135) + 'deg)'
-			        }}>
+					}}>
 					<div className="knob-needle">
 					</div>
 				</div>

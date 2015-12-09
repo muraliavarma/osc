@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import Knob from './Knob'
+import Visualiser from './Visualiser'
 
 class Oscillator extends Component {
 	constructor(props, context) {
@@ -37,24 +38,34 @@ class Oscillator extends Component {
 				this.oscillator.stop(0)
 			}
 
+			this.refs.viz.stop()
 			return
 		}
 
 		this.setState({'isPlaying': true})
 
-		this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+		this.audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)()
+		if (!window.audioCtx) {
+			window.audioCtx = this.audioCtx
+		}
+		this.analyser = this.audioCtx.createAnalyser()
+		this.analyser.fftSize = 2048
+		this.bufferLength = this.analyser.frequencyBinCount
+		this.dataArray = new Uint8Array(this.bufferLength)
+		this.refs.viz.start(this.analyser)
+
 		this.oscillator = this.audioCtx.createOscillator()
-		this.oscillator.type = 'sine'
+		this.oscillator.type = 'square'
 		this.oscillator.frequency.value = this.state.frequency // in hertz
 
 		this.gainNode = this.audioCtx.createGain()
 		this.gainNode.gain.value = this.state.volume/100
 
 		this.oscillator.connect(this.gainNode)
-		this.gainNode.connect(this.audioCtx.destination)
+		this.gainNode.connect(this.analyser)
+		this.analyser.connect(this.audioCtx.destination)
 
 		this.oscillator.start(0)
-
 	}
 
 	render() {
@@ -74,30 +85,11 @@ class Oscillator extends Component {
 					<Knob title="Volume" type="percent" value={this.state.volume} onChange={(value) => this.onVolumeChange(value)}></Knob>
 					<Knob title="Pan" type="percent" value={this.state.pan} minValue={-100} maxValue={100} onChange={(value) => this.onPanChange(value)}></Knob>
 					<Knob title="Frequency" type="percent" value={this.state.frequency} minValue={0} maxValue={2000} onChange={(value) => this.setFrequency(value)}></Knob>
-					{this.state.frequency}
-					<span onClick={(e) => {
-						this.setFrequency(100)
-					}}>A</span>
-					<span onClick={(e) => {
-						this.setFrequency(1000)
-					}}>B</span>
-					<span onClick={(e) => {
-						this.setFrequency(2000)
-					}}>C</span>
+					<Visualiser ref="viz"></Visualiser>
 				</div>
 			</div>
 		)
 	}
-}
-
-Oscillator.propTypes = {
-	// increment: PropTypes.func.isRequired,
-	// incrementIfOdd: PropTypes.func.isRequired,
-	// incrementAsync: PropTypes.func.isRequired,
-	// decrement: PropTypes.func.isRequired,
-	// oscillator: PropTypes.number.isRequired,
-	// volumeUp: PropTypes.func.isRequired,
-	// volumeDown: PropTypes.func.isRequired
 }
 
 export default Oscillator

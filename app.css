@@ -87,3 +87,9 @@ body {
 	padding: 3px;
 	background-color: #DDDDFF;
 }
+
+.oscillator-container > .visualiser {
+	float: right;
+	height: 120px;
+	width: 900px;
+}
