@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import Knob from './Knob'
+import Knob from './controls/knobs/Knob'
 import WaveSelector from './WaveSelector'
 import Visualiser from './Visualiser'
 
@@ -102,9 +102,9 @@ class Oscillator extends Component {
 				</div>
 				<hr/>
 				<div className="oscillator-container">
-					<Knob title="Volume" type="percent" value={this.state.volume} onChange={(value) => this.onVolumeChange(value)}></Knob>
-					<Knob title="Pan" type="percent" value={this.state.pan} minValue={-100} maxValue={100} onChange={(value) => this.onPanChange(value)}></Knob>
-					<Knob title="Frequency" type="percent" value={this.state.frequency} minValue={0} maxValue={2000} onChange={(value) => this.setFrequency(value)}></Knob>
+					<Knob title="Volume" type="plastic" value={this.state.volume} onChange={(value) => this.onVolumeChange(value)}></Knob>
+					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={(value) => this.onPanChange(value)}></Knob>
+					<Knob title="Frequency" type="minimal" value={this.state.frequency} minValue={0} maxValue={2000} onChange={(value) => this.setFrequency(value)}></Knob>
 					<WaveSelector onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
 					<Visualiser ref="viz"></Visualiser>
 				</div>

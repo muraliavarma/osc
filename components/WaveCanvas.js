@@ -16,7 +16,6 @@ class WaveCanvas extends BaseComponent {
 
 		ctx.fillStyle = '#FFFFFF';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		console.log(canvas.width, canvas.height)
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'rgb(40, 95, 95)';
 		ctx.beginPath();
@@ -52,26 +51,6 @@ class WaveCanvas extends BaseComponent {
 		}
 
 		ctx.stroke()
-
-		// var sliceWidth = canvas.width * 1.0 / this.bufferLength;
-		// var x = 0;
-
-		// for(var i = 0; i < this.bufferLength; i++) {
-
-		// 	var v = this.dataArray[i] / 128.0;
-		// 	var y = v * canvas.height/2;
-
-		// 	if(i === 0) {
-		// 		ctx.moveTo(x, y);
-		// 	} else {
-		// 		ctx.lineTo(x, y);
-		// 	}
-
-		// 	x += sliceWidth;
-		// };
-
-		// ctx.lineTo(canvas.width, canvas.height/2);
-		// ctx.stroke();
 	}
 
 	componentWillReceiveProps(wave) {

@@ -49,10 +49,13 @@ body {
 
 .knob-title {
 	text-align: center;
-	padding-top: 10px;
 	font-size: 12px;
 }
 
+.knob-minimal {
+	text-align: center;
+	font-size: 12px;
+}
 
 /*waveselector and wavecanvas*/
 
@@ -87,6 +90,7 @@ body {
 	height: 150px;
 	background-color: #AAAAAA;
 	padding: 10px;
+	margin-bottom: 5px; 
 }
 
 .oscillator-titlebar > * {
