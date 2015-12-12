@@ -12,7 +12,17 @@ class Oscillator extends Component {
 			frequency: this.props.frequency || 100,
 			isPlaying: false,
 			waveType: 'sine',
-			isHovering: false
+			isPlayPauseHovering: false,
+			isSelected: false
+		}
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		if (nextState.isSelected && !this.state.isSelected) {
+			console.log('listen', this.state.waveType)
+		}
+		else if (this.state.isSelected && !nextState.isSelected) {
+			console.log('unlisten', this.state.waveType)
 		}
 	}
 
@@ -88,15 +98,39 @@ class Oscillator extends Component {
 		this.setState({'waveType': waveType}, () => this.restartWebAudio())
 	}
 
+	onMouseOver(e) {
+		console.log(e.target, 'going in')
+		this.setState({isSelected: !this.state.isSelected})
+	}
+
+	onMouseOut(event) {
+		// this is the original element the event handler was assigned to
+		let e = event.toElement || event.relatedTarget
+
+		// check for all children levels (checking from bottom up)
+		while (e && e.parentNode && e.parentNode != window) {
+			if (e.parentNode == this.refs.container ||  e == this.refs.container) {
+				if(e.preventDefault) e.preventDefault();
+				return false;
+			}
+			e = e.parentNode;
+		}
+
+		console.log(e.target, 'going OUT')
+		this.setState({isSelected: !this.state.isSelected})
+	}
+
 	render() {
 		return (
-			<div className="oscillator">
+			<div className={this.state.isSelected? 'oscillator-hover' : 'oscillator'} ref="container"
+				onMouseOver={(e) => this.onMouseOver(e)}
+				onMouseOut={(e) => this.onMouseOut(e)}>
 				<div className="oscillator-titlebar">
 					<span className="oscillator-title">Oscillator</span>
 
-					<div onClick={() => this.onPlayPause()} className={this.state.isHovering? 'oscillator-play-pause-hover' : 'oscillator-play-pause'}
-						onMouseOver={() => this.setState({isHovering: !this.state.isHovering})}
-						onMouseOut={() => this.setState({isHovering: !this.state.isHovering})}>
+					<div onClick={() => this.onPlayPause()} className={this.state.isPlayPauseHovering? 'oscillator-play-pause-hover' : 'oscillator-play-pause'}
+						onMouseOver={() => this.setState({isPlayPauseHovering: !this.state.isPlayPauseHovering})}
+						onMouseOut={() => this.setState({isPlayPauseHovering: !this.state.isPlayPauseHovering})}>
 						<div className={this.state.isPlaying ? 'control-pause' : 'control-play'}></div>
 					</div>
 				</div>
