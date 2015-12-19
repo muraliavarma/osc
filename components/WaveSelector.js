@@ -6,7 +6,10 @@ class WaveSelector extends BaseComponent {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
-			waves: [{type: 'sine', selected: true}, {type: 'square'}, {type: 'sawtooth'}, {type: 'triangle'}]
+			waves: [{type: 'sine'}, {type: 'square'}, {type: 'sawtooth'}, {type: 'triangle'}].map((wave) => {
+				wave['selected'] = (wave.type == this.props.value)
+				return wave
+			})
 		}
 	}
 

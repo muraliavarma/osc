@@ -11,10 +11,14 @@ class WaveCanvas extends BaseComponent {
 	}
 
 	componentDidMount() {
-		var canvas = this.refs.canvas
-		var ctx = canvas.getContext('2d')
+		this.draw()
+	}
 
-		ctx.fillStyle = '#FFFFFF';
+	draw() {
+		let canvas = this.refs.canvas
+		let ctx = canvas.getContext('2d')
+
+		ctx.fillStyle = this.state.isSelected ? '#AAAA88' : '#FFFFFF';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'rgb(40, 95, 95)';
@@ -54,11 +58,8 @@ class WaveCanvas extends BaseComponent {
 	}
 
 	componentWillReceiveProps(wave) {
-		if (wave && wave.waveType == this.state.waveType && wave.isSelected) {
-			this.setState({'isSelected': true})
-		}
-		else {
-			this.setState({'isSelected': false})
+		if (wave && wave.waveType == this.state.waveType && wave.isSelected != this.state.isSelected) {
+			this.setState({'isSelected': wave.isSelected}, () => this.draw())
 		}
 	}
 

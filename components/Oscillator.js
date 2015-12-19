@@ -10,19 +10,16 @@ class Oscillator extends Component {
 			volume: this.props.volume || 75,
 			pan: this.props.pan || 0,
 			frequency: this.props.frequency || 100,
-			isPlaying: false,
-			waveType: 'sine',
+			isPlaying: this.props.isPlaying || false,
+			waveType: this.props.waveType || 'sine',
 			isPlayPauseHovering: false,
 			isSelected: false
 		}
 	}
 
-	componentWillUpdate(nextProps, nextState) {
-		if (nextState.isSelected && !this.state.isSelected) {
-			console.log('listen', this.state.waveType)
-		}
-		else if (this.state.isSelected && !nextState.isSelected) {
-			console.log('unlisten', this.state.waveType)
+	componentDidMount() {
+		if (this.state.isPlaying) {
+			this.startWebAudio();
 		}
 	}
 
@@ -99,25 +96,21 @@ class Oscillator extends Component {
 	}
 
 	onMouseOver(e) {
-		console.log(e.target, 'going in')
-		this.setState({isSelected: !this.state.isSelected})
+		if (e.target == this.refs.playPause) {
+			this.setState({isPlayPauseHovering: true})
+		}
+		else if (!this.state.isSelected) {
+			this.setState({isSelected: true})
+		}
 	}
 
-	onMouseOut(event) {
-		// this is the original element the event handler was assigned to
-		let e = event.toElement || event.relatedTarget
-
-		// check for all children levels (checking from bottom up)
-		while (e && e.parentNode && e.parentNode != window) {
-			if (e.parentNode == this.refs.container ||  e == this.refs.container) {
-				if(e.preventDefault) e.preventDefault();
-				return false;
-			}
-			e = e.parentNode;
+	onMouseOut(e) {
+		if (e.target == this.refs.playPause) {
+			this.setState({isPlayPauseHovering: false})
 		}
-
-		console.log(e.target, 'going OUT')
-		this.setState({isSelected: !this.state.isSelected})
+		else if (!this.refs.container.contains(e.relatedTarget)) {
+			this.setState({isSelected: false})
+		}
 	}
 
 	render() {
@@ -128,7 +121,7 @@ class Oscillator extends Component {
 				<div className="oscillator-titlebar">
 					<span className="oscillator-title">Oscillator</span>
 
-					<div onClick={() => this.onPlayPause()} className={this.state.isPlayPauseHovering? 'oscillator-play-pause-hover' : 'oscillator-play-pause'}
+					<div onClick={() => this.onPlayPause()} className={this.state.isPlayPauseHovering? 'oscillator-play-pause-hover' : 'oscillator-play-pause'} ref="playPause"
 						onMouseOver={() => this.setState({isPlayPauseHovering: !this.state.isPlayPauseHovering})}
 						onMouseOut={() => this.setState({isPlayPauseHovering: !this.state.isPlayPauseHovering})}>
 						<div className={this.state.isPlaying ? 'control-pause' : 'control-play'}></div>
@@ -136,10 +129,10 @@ class Oscillator extends Component {
 				</div>
 				<hr/>
 				<div className="oscillator-container">
-					<Knob title="Volume" type="plastic" value={this.state.volume} onChange={(value) => this.onVolumeChange(value)}></Knob>
-					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={(value) => this.onPanChange(value)}></Knob>
-					<Knob title="Frequency" type="minimal" value={this.state.frequency} minValue={0} maxValue={2000} onChange={(value) => this.setFrequency(value)}></Knob>
-					<WaveSelector onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
+					<Knob title="Volume" type="plastic" value={this.state.volume} onChange={value => this.onVolumeChange(value)}></Knob>
+					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={value => this.onPanChange(value)}></Knob>
+					<Knob title="Frequency" type="minimal" value={this.state.frequency} minValue={0} maxValue={2000} onChange={value => this.setFrequency(value)}></Knob>
+					<WaveSelector value={this.state.waveType} onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
 					<Visualiser ref="viz"></Visualiser>
 				</div>
 			</div>
