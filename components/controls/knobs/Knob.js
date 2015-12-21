@@ -7,7 +7,8 @@ class Knob extends BaseComponent {
 		this.state = {
 			value: this.props.value || 50,
 			minValue: this.props.minValue || 0,
-			maxValue: this.props.maxValue || 100
+			maxValue: this.props.maxValue || 100,
+			isHovering: false
 		}
 	}
 
@@ -30,12 +31,13 @@ class Knob extends BaseComponent {
 			let ctx = canvas.getContext('2d')
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-			ctx.lineWidth = 1
-			ctx.strokeStyle = 'rgb(40, 95, 95)'
+			ctx.lineWidth = 2
+			ctx.strokeStyle = 'rgb(200, 200, 200)'
+			ctx.fillStyle = this.state.isHovering ? 'rgb(240, 240, 220)' : 'rgb(200, 200, 200)'
 			const centerX = canvas.width / 2
 			const centerY = canvas.height / 2
-			const innerR = 15
-			const outerR = 25
+			const innerR = 14
+			const outerR = 24
 			const rootTwoInverse = 1 / Math.sqrt(2)
 			const fillAngle = 135 + 270 * (this.state.value - this.state.minValue) / (this.state.maxValue - this.state.minValue)
 			const angleOffset = 270
@@ -64,7 +66,7 @@ class Knob extends BaseComponent {
 			// show text value
 			ctx.font = '10px Arial';
 			ctx.textAlign = 'center';
-			ctx.fillText(this.state.value, centerX, centerY)
+			ctx.fillText(this.state.value, centerX, centerY + 1)
 		}
 	}
 
@@ -97,11 +99,19 @@ class Knob extends BaseComponent {
 		this.props.onChange(this.state.value)
 	}
 
+	onMouseOver(e) {
+		this.setState({'isHovering': true}, () => this.drawCanvas())
+	}
+
+	onMouseOut(e) {
+		this.setState({'isHovering': false}, () => this.drawCanvas())
+	}
+
 	render() {
 		const { title } = this.props
 		if (this.props.type == 'minimal') {
 			return (
-				<div className="knob-container">
+				<div className="knob-container" onMouseOver={(e) => this.onMouseOver(e)} onMouseOut={(e) => this.onMouseOut(e)}>
 					<canvas ref="canvas" width="50" height="50" className="knob-minimal" onWheel={(e) => this.onWheel(e)} onClick={(e) => this.onClick(e)}></canvas>
 					<div className="knob-title">{title}</div>
 				</div>

@@ -33,8 +33,7 @@ class Visualiser extends BaseComponent {
 
 		this.analyser.getByteTimeDomainData(this.dataArray);
 
-		ctx.fillStyle = '#AAAAAA';
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'rgb(40, 95, 95)';
 		ctx.beginPath();

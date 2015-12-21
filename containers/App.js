@@ -15,6 +15,7 @@ class App extends Component {
 					isPlaying: true
 				},
 				oscillators: [{
+					title: 'Triangle',
 					volume: 40,
 					pan: 30,
 					waveType: 'triangle',

@@ -6,7 +6,8 @@ class WaveCanvas extends BaseComponent {
 		super(props, context)
 		this.state = {
 			waveType: this.props.waveType || 'sine',
-			isSelected: this.props.isSelected || false
+			isSelected: this.props.isSelected || false,
+			isHovering: false
 		}
 	}
 
@@ -17,41 +18,43 @@ class WaveCanvas extends BaseComponent {
 	draw() {
 		let canvas = this.refs.canvas
 		let ctx = canvas.getContext('2d')
+		const h = canvas.height
+		const w = canvas.width
 
-		ctx.fillStyle = this.state.isSelected ? '#AAAA88' : '#FFFFFF';
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = 'rgb(40, 95, 95)';
+		ctx.fillStyle = this.state.isSelected ? '#444444' : '#666666';
+		ctx.fillRect(0, 0, w, h);
+		ctx.lineWidth = this.state.isSelected || this.state.isHovering ? 2 : 1;
+		ctx.strokeStyle = 'rgb(200, 200, 200)';
 		ctx.beginPath();
 
 		if (this.state.waveType == 'sine') {
 			const offset = 2
-			ctx.moveTo(offset, canvas.height / 2)
-			for (var i = offset; i <= canvas.width - offset; i++) {
-				ctx.lineTo(i, canvas.height / 2 - (canvas.height - 6 * offset) * Math.sin(2 * Math.PI * (i - offset) / (canvas.width - 2 * offset)))
+			ctx.moveTo(offset, h / 2)
+			for (var i = offset; i <= w - offset; i++) {
+				ctx.lineTo(i, h / 2 - (h - 6 * offset) * Math.sin(2 * Math.PI * (i - offset) / (w - 2 * offset)))
 			}
 		}
 		else if (this.state.waveType == 'square') {
 			const offset = 3
-			ctx.moveTo(offset, offset)
-			ctx.lineTo(offset, canvas.height - offset)
-			ctx.lineTo(canvas.width / 2, canvas.height - offset)
-			ctx.lineTo(canvas.width / 2, offset)
-			ctx.lineTo(canvas.width - offset, offset)
-			ctx.lineTo(canvas.width - offset, canvas.height - offset)
+			ctx.moveTo(offset, offset - 1)
+			ctx.lineTo(offset, h - offset)
+			ctx.lineTo(w / 2, h - offset)
+			ctx.lineTo(w / 2, offset)
+			ctx.lineTo(w - offset, offset)
+			ctx.lineTo(w - offset, h - offset + 1)
 		}
 		else if (this.state.waveType == 'sawtooth') {
 			const offset = 3
 			ctx.moveTo(offset, offset)
-			ctx.lineTo(offset, canvas.height - offset)
-			ctx.lineTo(canvas.width - offset, offset)
-			ctx.lineTo(canvas.width - offset, canvas.height - offset)
+			ctx.lineTo(offset, h - offset)
+			ctx.lineTo(w - offset, offset)
+			ctx.lineTo(w - offset, h - offset)
 		}
 		else if (this.state.waveType == 'triangle') {
 			const offset = 3
-			ctx.moveTo(offset, canvas.height - offset)
-			ctx.lineTo(canvas.width / 2, offset)
-			ctx.lineTo(canvas.width - offset, canvas.height - offset)
+			ctx.moveTo(offset, h - offset)
+			ctx.lineTo(w / 2, offset)
+			ctx.lineTo(w - offset, h - offset)
 		}
 
 		ctx.stroke()
@@ -63,9 +66,19 @@ class WaveCanvas extends BaseComponent {
 		}
 	}
 
+	onMouseOver(e) {
+		this.setState({'isHovering': true}, () => this.draw())
+	}
+
+	onMouseOut(e) {
+		this.setState({'isHovering': false}, () => this.draw())
+	}
+
 	render() {
 		return (
-			<canvas ref="canvas" width="20" height="20" className={this.state.isSelected ? 'wavecanvas-selected' : 'wavecanvas'} onClick={() => this.props.onClick(this.state.waveType)}></canvas>
+			<div onMouseOver={(e) => this.onMouseOver(e)} onMouseOut={(e) => this.onMouseOut(e)}>
+				<canvas ref="canvas" width="20" height="20" className={this.state.isSelected ? 'wavecanvas-selected' : 'wavecanvas'} onClick={() => this.props.onClick(this.state.waveType)}></canvas>
+			</div>
 		)
 	}
 }

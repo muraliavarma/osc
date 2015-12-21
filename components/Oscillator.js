@@ -7,6 +7,7 @@ class Oscillator extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
+			title: this.props.title || 'Oscillator',
 			volume: this.props.volume || 75,
 			pan: this.props.pan || 0,
 			frequency: this.props.frequency || 100,
@@ -115,11 +116,11 @@ class Oscillator extends Component {
 
 	render() {
 		return (
-			<div className={this.state.isSelected? 'oscillator-hover' : 'oscillator'} ref="container"
+			<div className={this.state.isSelected? 'oscillator oscillator-hover' : 'oscillator'} ref="container"
 				onMouseOver={(e) => this.onMouseOver(e)}
 				onMouseOut={(e) => this.onMouseOut(e)}>
 				<div className="oscillator-titlebar">
-					<span className="oscillator-title">Oscillator</span>
+					<span className="oscillator-title">{this.state.title}</span>
 
 					<div onClick={() => this.onPlayPause()} className={this.state.isPlayPauseHovering? 'oscillator-play-pause-hover' : 'oscillator-play-pause'} ref="playPause"
 						onMouseOver={() => this.setState({isPlayPauseHovering: !this.state.isPlayPauseHovering})}
@@ -127,11 +128,11 @@ class Oscillator extends Component {
 						<div className={this.state.isPlaying ? 'control-pause' : 'control-play'}></div>
 					</div>
 				</div>
-				<hr/>
+				<br/>
 				<div className="oscillator-container">
-					<Knob title="Volume" type="plastic" value={this.state.volume} onChange={value => this.onVolumeChange(value)}></Knob>
+					<Knob title="Volume" type="minimal" value={this.state.volume} onChange={value => this.onVolumeChange(value)}></Knob>
 					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={value => this.onPanChange(value)}></Knob>
-					<Knob title="Frequency" type="minimal" value={this.state.frequency} minValue={0} maxValue={2000} onChange={value => this.setFrequency(value)}></Knob>
+					<Knob title="Freq" type="minimal" value={this.state.frequency} minValue={0} maxValue={2000} onChange={value => this.setFrequency(value)}></Knob>
 					<WaveSelector value={this.state.waveType} onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
 					<Visualiser ref="viz"></Visualiser>
 				</div>
