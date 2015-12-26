@@ -2,13 +2,16 @@ import React, { Component, PropTypes } from 'react'
 import Knob from './controls/knobs/Knob'
 import WaveSelector from './WaveSelector'
 import Visualiser from './Visualiser'
+import ADSR from './ADSR'
 
 class Oscillator extends Component {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
 			title: this.props.title || 'Oscillator',
-			volume: this.props.volume || 75,
+			volume: {
+				value: this.props.volume || 75
+			},
 			pan: this.props.pan || 0,
 			frequency: this.props.frequency || 100,
 			isPlaying: this.props.isPlaying || false,
@@ -20,14 +23,17 @@ class Oscillator extends Component {
 
 	componentDidMount() {
 		if (this.state.isPlaying) {
-			this.startWebAudio();
+			this.startWebAudio()
 		}
 	}
 
 	onVolumeChange(value) {
-		this.setState({'volume': value})
-		if (this.gainNode)
-			this.gainNode.gain.value = this.state.volume/100
+		let vol = this.state.volume
+		vol.value = value
+		const now = audioCtx.currentTime
+		this.param.cancelScheduledValues(now)
+		this.setState({'volume': vol})
+		this.gainNode.gain.value = this.state.volume.value/100			
 	}
 
 	onPanChange(value) {
@@ -67,11 +73,18 @@ class Oscillator extends Component {
 		this.oscillator.frequency.value = this.state.frequency // in hertz
 
 		this.gainNode = this.audioCtx.createGain()
-		this.gainNode.gain.value = this.state.volume/100
+		this.gainNode.gain.value = this.state.volume.value / 100
 
 		this.oscillator.connect(this.gainNode)
 		this.gainNode.connect(this.analyser)
-		this.analyser.connect(this.audioCtx.destination)
+		// this.gainNode.connect(this.envelope)
+		this.param = this.gainNode.gain
+		const now = audioCtx.currentTime
+		this.param.cancelScheduledValues(now)
+		this.param.setValueAtTime(0, now)
+		this.param.linearRampToValueAtTime(1, now + 1)
+		this.param.linearRampToValueAtTime(0.8, now + 2)
+		this.gainNode.connect(this.audioCtx.destination)
 
 		this.oscillator.start(0)
 		this.refs.viz.start(this.analyser)
@@ -130,10 +143,11 @@ class Oscillator extends Component {
 				</div>
 				<br/>
 				<div className="oscillator-container">
-					<Knob title="Volume" type="minimal" value={this.state.volume} onChange={value => this.onVolumeChange(value)}></Knob>
+					<Knob title="Volume" type="minimal" value={this.state.volume.value} onChange={value => this.onVolumeChange(value)}></Knob>
 					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={value => this.onPanChange(value)}></Knob>
-					<Knob title="Freq" type="minimal" value={this.state.frequency} minValue={0} maxValue={2000} onChange={value => this.setFrequency(value)}></Knob>
+					<Knob title="Freq" type="minimal" value={this.state.frequency} minValue={0} maxValue={4000} onChange={value => this.setFrequency(value)}></Knob>
 					<WaveSelector value={this.state.waveType} onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
+					<ADSR></ADSR>
 					<Visualiser ref="viz"></Visualiser>
 				</div>
 			</div>

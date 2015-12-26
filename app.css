@@ -13,6 +13,7 @@ body {
 	border-top: 5px solid transparent;
 	border-bottom: 5px solid transparent;
 	margin-left: 2px;
+	margin-right: 2px;
 }
 
 .control-pause {
@@ -33,6 +34,14 @@ body {
 	height: 50px;
 	float: left;
 	padding-right: 20px;
+}
+
+.knob-container-mini {
+	width: 30px;
+	height: 30px;
+	float: left;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 .knob-circle {
@@ -57,6 +66,16 @@ body {
 .knob-minimal {
 	text-align: center;
 	font-size: 12px;
+}
+
+.knob-mini {
+	text-align: center;
+	font-size: 12px;
+}
+
+.knob-title-mini {
+	text-align: center;
+	font-size: 8px;
 }
 
 /*waveselector and wavecanvas*/
@@ -88,7 +107,7 @@ body {
 /*oscillator*/
 
 .oscillator {
-	width: 100%;
+	width: 99%;
 	height: 150px;
 	/*background-color: #AAAAAA;*/
 	padding: 10px;
@@ -96,7 +115,7 @@ body {
 }
 
 .oscillator-hover {
-	box-shadow: 0px 0px 5px #111111;
+	box-shadow: inset 0px 0px 10px #777777;
 }
 
 .oscillator-titlebar > * {
@@ -124,8 +143,30 @@ body {
 	padding: 3px;
 }
 
+.oscillator-container {
+
+}
+
+.oscillator-list {
+	width: 50%;
+}
+
 .oscillator-container > .visualiser {
 	float: right;
 	height: 120px;
-	width: 900px;
+	width: 200px;
+}
+
+.adsr-canvas {
+	height: 50px;
+	width: 200px;
+}
+
+.adsr-container {
+	float: left;
+}
+
+.adsr-controls {
+	margin: 0 auto;
+	width: 100%;
 }

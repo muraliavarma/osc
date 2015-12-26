@@ -35,7 +35,7 @@ class Visualiser extends BaseComponent {
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.lineWidth = 1;
-		ctx.strokeStyle = 'rgb(40, 95, 95)';
+		ctx.strokeStyle = 'rgb(140, 195, 195)';
 		ctx.beginPath();
 
 		var sliceWidth = canvas.width * 1.0 / this.bufferLength;

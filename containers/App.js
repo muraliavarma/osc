@@ -24,7 +24,23 @@ class App extends Component {
 					volume: 20,
 					pan: 40,
 					frequency: 1000
-				},{},{}]
+				}, {
+					isPlaying: false,
+					waveType: 'triangle',
+					frequency: 2000
+				}, {
+					isPlaying: false,
+					waveType: 'square',
+					frequency: 500
+				}, {
+					isPlaying: false,
+					waveType: 'triangle',
+					frequency: 200
+				}, {
+					isPlaying: false
+				}, {
+					isPlaying: false
+				}]
 			}
 		}
 	}
@@ -40,11 +56,13 @@ class App extends Component {
 	render() {
 		return (
 			<div>
-				{this.state.data.oscillators.map((oscillator, index) => 
-					<Oscillator
-						key={index} {...oscillator}
-					 />
-				)}
+				<div className="oscillator-list">
+					{this.state.data.oscillators.map((oscillator, index) => 
+						<Oscillator
+							key={index} {...oscillator}
+						 />
+					)}
+				</div>
 			</div>
 		);
 	}
