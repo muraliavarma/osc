@@ -1,20 +1,12 @@
 import React, { Component, PropTypes } from 'react'
-import BaseComponent from '../../BaseComponent'
+import BaseKnob from './BaseKnob'
 
-class Knob extends BaseComponent {
+class Knob extends BaseKnob {
 	constructor(props, context) {
 		super(props, context)
-		this.state = {
-			value: this.props.value,
-			minValue: this.props.minValue || 0,
-			maxValue: this.props.maxValue || 100,
+		this.state = Object.assign({}, this.state, {
 			isHovering: false
-		}
-	}
-
-	onWheel(event) {
-		event.preventDefault()
-		this.setState({'value': Math.min(Math.max(this.state.minValue, this.state.value - event.deltaY), this.state.maxValue)}, () => this.notifyChange())
+		})
 	}
 
 	componentDidMount() {
@@ -22,22 +14,18 @@ class Knob extends BaseComponent {
 	}
 
 	drawCanvas() {
-		requestAnimationFrame(() => {
-			this.drawCanvas()
-		})
-
 		if (this.props.type == 'minimal' || this.props.type == 'mini') {
 			let canvas = this.refs.canvas
 			let ctx = canvas.getContext('2d')
 			ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-			ctx.lineWidth = this.props.type =='mini' ? 1 : 2
+			ctx.lineWidth = this.props.type == 'minimal' ? 2 : 1
 			ctx.strokeStyle = 'rgb(200, 200, 200)'
 			ctx.fillStyle = this.state.isHovering ? 'rgb(240, 240, 220)' : 'rgb(200, 200, 200)'
 			const centerX = canvas.width / 2
 			const centerY = canvas.height / 2
-			const innerR = this.props.type == 'mini' ? 7 : 14
-			const outerR = this.props.type == 'mini' ? 12 : 24
+			const innerR = this.props.type == 'minimal' ? 14 : 7
+			const outerR = this.props.type == 'minimal' ? 24 : 12
 			const rootTwoInverse = 1 / Math.sqrt(2)
 			const fillAngle = 135 + 270 * (this.state.value - this.state.minValue) / (this.state.maxValue - this.state.minValue)
 			const angleOffset = 270
@@ -68,6 +56,43 @@ class Knob extends BaseComponent {
 				ctx.font = '10px Arial';
 				ctx.textAlign = 'center';
 				ctx.fillText(this.state.value, centerX, centerY + 1)
+			}
+		}
+		else if (this.props.type == 'toolbar') {
+			let canvas = this.refs.canvas
+			let ctx = canvas.getContext('2d')
+			ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+			ctx.lineWidth = 2
+			ctx.strokeStyle = 'rgb(100, 100, 100)'
+			ctx.fillStyle = this.state.isHovering ? 'rgb(240, 240, 220)' : 'rgb(200, 200, 200)'
+
+			const centerX = canvas.width / 2
+			const centerY = canvas.height / 2
+			const offsetTop = 6
+			const offsetBot = 5
+			const side = 7
+
+			ctx.font = '12px Helvetica';
+			ctx.textAlign = 'center';
+			ctx.fillText(this.props.title, centerX, centerY + 4)
+
+			if (this.state.isHovering) {
+				ctx.beginPath()
+				ctx.moveTo(centerX, offsetTop)
+				ctx.lineTo(centerX - side / 2, offsetTop + side * Math.sqrt(3) / 2)
+				ctx.lineTo(centerX + side / 2, offsetTop + side * Math.sqrt(3) / 2)
+				ctx.closePath()
+				ctx.stroke()
+				ctx.fill()
+
+				ctx.beginPath()
+				ctx.moveTo(centerX, canvas.height - offsetBot)
+				ctx.lineTo(centerX - side / 2, canvas.height - offsetBot - side * Math.sqrt(3) / 2)
+				ctx.lineTo(centerX + side / 2, canvas.height - offsetBot - side * Math.sqrt(3) / 2)
+				ctx.closePath()
+				ctx.stroke()
+				ctx.fill()
 			}
 		}
 	}
@@ -119,6 +144,13 @@ class Knob extends BaseComponent {
 				</div>
 			)
 		}
+		if (this.props.type == 'toolbar') {
+			return (
+				<div className="knob-container-toolbar" onMouseOver={(e) => this.onMouseOver(e)} onMouseOut={(e) => this.onMouseOut(e)}>
+					<canvas ref="canvas" width="50" height="40" className="knob-toolbar" onWheel={(e) => this.onWheel(e)} onClick={(e) => this.onClick(e)}></canvas>
+				</div>
+			)
+		}
 		else if (this.props.type == 'minimal') {
 			return (
 				<div className="knob-container" onMouseOver={(e) => this.onMouseOver(e)} onMouseOut={(e) => this.onMouseOut(e)}>
@@ -143,7 +175,6 @@ class Knob extends BaseComponent {
 }
 
 Knob.propTypes = {
-	title: PropTypes.string.isRequired,
 	value: PropTypes.number.isRequired,
 	type: PropTypes.string.isRequired,
 	onChange: PropTypes.func.isRequired

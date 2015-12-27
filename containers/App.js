@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import Oscillator from '../components/Oscillator'
+import Toolbar from '../components/controls/Toolbar'
 
 import * as OscillatorActions from '../actions/oscillator'
 
@@ -12,7 +13,7 @@ class App extends Component {
 		this.state = {
 			data: {
 				playback: {
-					isPlaying: true
+					isPlaying: false
 				},
 				oscillators: [{
 					title: 'Triangle',
@@ -46,16 +47,29 @@ class App extends Component {
 	}
 
 	componentDidMount() {
+		if (this.state.isPlaying) {
+			this.play()
+		}
 		document.addEventListener("keydown", this.onKeyDown, false);
 	}
 
 	onKeyDown(event) {
-		console.log(event.keyCode)
+
+	}
+
+	onPlayPause(isPlaying) {
+		let data = Object.assign({}, this.state.data)
+		data.oscillators.map((item) => {
+			item.isPlaying = isPlaying
+			return item
+		})
+		this.setState({'data': data})
 	}
 
 	render() {
 		return (
 			<div>
+				<Toolbar isPlaying={this.state.data.playback.isPlaying} onPlayPause={(val) => this.onPlayPause(val)}></Toolbar>
 				<div className="oscillator-list">
 					{this.state.data.oscillators.map((oscillator, index) => 
 						<Oscillator

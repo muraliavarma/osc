@@ -2,6 +2,48 @@ body {
 	background-color: #282828;
 	color: #F0F0F0;
 	font: 10px Helvetica;
+	margin: 0 auto;
+}
+
+/*toolbar*/
+
+.toolbar-container {
+	height: 20px;
+	box-shadow: 0px 4px 4px -4px #777777;
+	padding-bottom: 15px;
+	font-size: 12px;
+}
+
+.toolbar-container > * {
+	float: left;
+	display: inline;
+	vertical-align: middle;
+	margin-left: 10px;
+	margin-right: 10px;
+	line-height: 10px;
+}
+
+.toolbar-title {
+	font-size: 12px;
+	margin-top: 15px;
+	font-weight: bold;
+}
+
+.knob-toolbar {
+	text-align: center;
+	font-size: 12px;
+	height: 40px;
+	width: 50px;
+}
+
+.knob-title-toolbar {
+	display: inline-block;
+	height: 40px;
+	width: 50px;
+}
+
+.toolbar-play {
+	margin-top: 10px;
 }
 
 /*control*/
@@ -44,6 +86,18 @@ body {
 	padding-right: 5px;
 }
 
+.knob-container-toolbar {
+	width: 50px;
+	height: 20px;
+	float: left;
+	padding-left: 2px;
+	padding-right: 2px;
+}
+
+.knob-container-toolbar > * {
+	display: inline-block;
+}
+
 .knob-circle {
 	background-image: radial-gradient(ellipse farthest-corner at 50% 20% , #666666 0%, #3C3C3C 50%, #5A5A5A 90%, #000000 100%);
 	border-radius: 50%;
@@ -77,6 +131,7 @@ body {
 	text-align: center;
 	font-size: 8px;
 }
+
 
 /*waveselector and wavecanvas*/
 

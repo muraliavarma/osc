@@ -3,8 +3,9 @@ import Knob from './controls/knobs/Knob'
 import WaveSelector from './WaveSelector'
 import Visualiser from './Visualiser'
 import ADSR from './ADSR'
+import BaseAudioComponent from './BaseAudioComponent'
 
-class Oscillator extends Component {
+class Oscillator extends BaseAudioComponent {
 	constructor(props, context) {
 		super(props, context)
 		this.state = {
@@ -27,13 +28,25 @@ class Oscillator extends Component {
 		}
 	}
 
+	componentWillReceiveProps(data) {
+		if (data.isPlaying === true) {
+			this.setState({'isPlaying': true})
+			this.startWebAudio()
+		}
+		else if (data.isPlaying === false) {
+			this.stopWebAudio()
+		}
+	}
+
 	onVolumeChange(value) {
 		let vol = this.state.volume
 		vol.value = value
-		const now = audioCtx.currentTime
+		const now = this.audioCtx.currentTime
 		this.param.cancelScheduledValues(now)
+		this.param.linearRampToValueAtTime(value/100, now)
 		this.setState({'volume': vol})
-		this.gainNode.gain.value = this.state.volume.value/100			
+		// this.gainNode.gain.value = this.state.volume.value/100
+		console.log(this.gainNode.gain.value)
 	}
 
 	onPanChange(value) {
@@ -49,7 +62,6 @@ class Oscillator extends Component {
 
 	onPlayPause() {
 		if (this.state.isPlaying) {
-			this.setState({'isPlaying': false})
 			this.stopWebAudio()
 			return
 		}
@@ -59,6 +71,7 @@ class Oscillator extends Component {
 	}
 
 	startWebAudio() {
+				console.log('123')
 		this.audioCtx = window.audioCtx || new (window.AudioContext || window.webkitAudioContext)()
 		if (!window.audioCtx) {
 			window.audioCtx = this.audioCtx
@@ -79,7 +92,7 @@ class Oscillator extends Component {
 		this.gainNode.connect(this.analyser)
 		// this.gainNode.connect(this.envelope)
 		this.param = this.gainNode.gain
-		const now = audioCtx.currentTime
+		const now = this.audioCtx.currentTime
 		this.param.cancelScheduledValues(now)
 		this.param.setValueAtTime(0, now)
 		this.param.linearRampToValueAtTime(1, now + 1)
@@ -87,14 +100,19 @@ class Oscillator extends Component {
 		this.gainNode.connect(this.audioCtx.destination)
 
 		this.oscillator.start(0)
+		// this.stopWebAudio(1)
 		this.refs.viz.start(this.analyser)
 	}
 
-	stopWebAudio() {
+	stopWebAudio(delay = 0) {
 		if (this.oscillator) {
-			this.oscillator.stop(0)
-			this.oscillator.disconnect()
-			this.refs.viz.stop()
+			this.oscillator.stop(delay)
+			setTimeout(() => {
+				console.log(delay, 'delay')
+				this.oscillator = undefined
+				this.refs.viz.stop()
+				this.setState({'isPlaying': false})
+			}, delay * 1000)
 		}
 	}
 
@@ -147,7 +165,7 @@ class Oscillator extends Component {
 					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={value => this.onPanChange(value)}></Knob>
 					<Knob title="Freq" type="minimal" value={this.state.frequency} minValue={0} maxValue={4000} onChange={value => this.setFrequency(value)}></Knob>
 					<WaveSelector value={this.state.waveType} onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
-					<ADSR></ADSR>
+					<ADSR value={this.state.volume}></ADSR>
 					<Visualiser ref="viz"></Visualiser>
 				</div>
 			</div>
