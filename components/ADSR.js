@@ -8,6 +8,7 @@ class ADSR extends BaseComponent {
 		super(props, context)
 		this.state = {
 			shouldShow: true,
+			value: this.props.value || 0,
 			attack: 20,
 			hold: 30,
 			decay: 30,
@@ -34,16 +35,27 @@ class ADSR extends BaseComponent {
 		ctx.beginPath()
 
 		ctx.moveTo(0, canvas.height)
-		ctx.lineTo((w / wMax) * (this.state.attack), 0)
-		ctx.lineTo((w / wMax) * (this.state.attack + this.state.hold), 0)
-		ctx.lineTo((w / wMax) * (this.state.attack + this.state.hold + this.state.decay), (h / hMax) * this.state.sustain)
+		ctx.lineTo((w / wMax) * (this.state.attack), (h / hMax) * (100 - this.state.value))
+		ctx.lineTo((w / wMax) * (this.state.attack + this.state.hold), (h / hMax) * (100 - this.state.value))
+		ctx.lineTo((w / wMax) * (this.state.attack + this.state.hold + this.state.decay), (h / hMax) * (this.state.sustain + 100 - this.state.value))
 		ctx.lineTo((w / wMax) * (this.state.attack + this.state.hold + this.state.decay + this.state.release), h)
 		ctx.stroke()
+		ctx.closePath()
+		ctx.fillStyle = 'rgb(20, 30, 20)'
+		ctx.fill()
 	}
 
 	onChange(type, val) {
 		this.setState({[type]: val}, () => this.draw())
 	}
+
+	componentWillReceiveProps(data) {
+		if (data.value && data.value != this.state.value) {
+			console.log(data.value, this.state.value)
+			this.onChange('value', data.value)
+		}
+	}
+
 
 	render() {
 		return (

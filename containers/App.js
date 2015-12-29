@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import Oscillator from '../components/Oscillator'
 import Toolbar from '../components/controls/Toolbar'
+import Song from '../components/Song'
 
 import * as OscillatorActions from '../actions/oscillator'
 
@@ -70,15 +70,9 @@ class App extends Component {
 		return (
 			<div>
 				<Toolbar isPlaying={this.state.data.playback.isPlaying} onPlayPause={(val) => this.onPlayPause(val)}></Toolbar>
-				<div className="oscillator-list">
-					{this.state.data.oscillators.map((oscillator, index) => 
-						<Oscillator
-							key={index} {...oscillator}
-						 />
-					)}
-				</div>
+				<Song></Song>
 			</div>
-		);
+		)
 	}
 }
 

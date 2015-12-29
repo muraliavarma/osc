@@ -46,7 +46,7 @@ class Oscillator extends BaseAudioComponent {
 		this.param.linearRampToValueAtTime(value/100, now)
 		this.setState({'volume': vol})
 		// this.gainNode.gain.value = this.state.volume.value/100
-		console.log(this.gainNode.gain.value)
+		// console.log(this.gainNode.gain.value)
 	}
 
 	onPanChange(value) {
@@ -165,7 +165,7 @@ class Oscillator extends BaseAudioComponent {
 					<Knob title="Pan" type="minimal" value={this.state.pan} minValue={-100} maxValue={100} onChange={value => this.onPanChange(value)}></Knob>
 					<Knob title="Freq" type="minimal" value={this.state.frequency} minValue={0} maxValue={4000} onChange={value => this.setFrequency(value)}></Knob>
 					<WaveSelector value={this.state.waveType} onChange={(waveType) => this.onWaveSelect(waveType)}></WaveSelector>
-					<ADSR value={this.state.volume}></ADSR>
+					<ADSR value={this.state.volume.value}></ADSR>
 					<Visualiser ref="viz"></Visualiser>
 				</div>
 			</div>
