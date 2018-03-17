@@ -10,18 +10,12 @@ class Song extends BaseComponent {
 			song: [{
 				patternIdx: 0,
 				startBar: 0
-			}, {
-				patternIdx: 1,
-				startBar: 1
 			}],
 			patterns: [{
 				idx: 0,
+				title: 'Piano 01',
 				notes: ['3C3', '2D3', '2G3'],
 				oscillators: [0, 1]
-			}, {
-				idx: 1,
-				notes: ['1E3', '0F3', '0D3'],
-				oscillators: [1, 2]
 			}],
 			oscillators: [{
 				idx: 0,
@@ -52,6 +46,7 @@ class Song extends BaseComponent {
 					{this.state.song.map((pattern, index) => 
 						<Pattern
 							key={index}
+							title={this.state.patterns[pattern.patternIdx].title}
 							notes={this.state.patterns[pattern.patternIdx].notes}
 							oscillators={this.state.patterns[pattern.patternIdx].oscillators.map((oscillatorId, index) => this.state.oscillators[oscillatorId])}
 						 />
